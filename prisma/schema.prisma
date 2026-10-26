@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id                String   @id @default(cuid())
+  name              String
+  slug              String   @unique
+  airtableBaseId    String?
+  airtableTableId   String?
+  airtablePat       String?
+  airtableWebhookId String?
+  airtableMacSecret String?
+  n8nShipUrl        String?
+  n8nInspectionUrl  String?
+  n8nPortalKey      String?
+  whatsappPhoneId   String?
+  timezone          String   @default("Asia/Karachi")
+  createdAt         DateTime @default(now())
+  users             User[]
+  auditLogs         AuditLog[]
+  webhookCursors    WebhookCursor[]
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String
+  passwordHash String
+  role         String
+  tenantId     String
+  tenant       Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  auditLogs    AuditLog[]
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  requestId String
+  action    String
+  result    String?
+  meta      String?
+  createdAt DateTime @default(now())
+
+  @@index([requestId])
+  @@index([tenantId, createdAt])
+}
+
+model WebhookCursor {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  key       String
+  cursor    Int      @default(1)
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, key])
+}
