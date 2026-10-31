@@ -8,7 +8,7 @@ async function main() {
   if (!domain) {
     throw new Error("Set PORTAL_DOMAIN e.g. https://portal.example.com");
   }
-  const tenant = await prisma.tenant.findFirst({ where: { slug: "ddu" } });
+  const tenant = await prisma.tenant.findFirst({ where: { slug: "returniq" } });
   if (!tenant) throw new Error("Seed the database first");
 
   const result = await ensureWebhook(tenant, `${domain.replace(/\/$/, "")}/api/airtable/webhook`);

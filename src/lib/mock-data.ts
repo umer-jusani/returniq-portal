@@ -302,7 +302,7 @@ export function createMockRequests(): PortalRequest[] {
     {
       id: "rec_broken_json",
       order_no: "1022",
-      customer: { phone: "923009990011", email: "ops@ddusupplies.com" },
+      customer: { phone: "923009990011", email: "ops@returniq.dev" },
       type: "exchange",
       status: "inspection_pending",
       inspection_status: "pending",

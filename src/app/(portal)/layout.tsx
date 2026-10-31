@@ -13,7 +13,7 @@ export default async function PortalLayout({
   const tenant = await getTenant(session.tenantId);
 
   return (
-    <AppShell user={session} tenantName={tenant.name} demo={isDemoTenant(tenant)}>
+    <AppShell user={session} demo={isDemoTenant(tenant)}>
       {children}
     </AppShell>
   );

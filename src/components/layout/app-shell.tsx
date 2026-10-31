@@ -22,12 +22,10 @@ const NAV = [
 
 export function AppShell({
   user,
-  tenantName,
   demo,
   children,
 }: {
   user: SessionUser;
-  tenantName: string;
   demo: boolean;
   children: React.ReactNode;
 }) {
@@ -48,9 +46,6 @@ export function AppShell({
       <aside className="hidden border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex lg:flex-col">
         <div className="px-5 py-6">
           <Logo inverted />
-          <p className="mt-3 text-[11px] tracking-[0.18em] text-sidebar-muted uppercase">
-            {tenantName}
-          </p>
         </div>
         <nav className="flex flex-1 flex-col gap-1 px-3">
           {links.map((item) => {

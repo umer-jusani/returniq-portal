@@ -29,7 +29,7 @@ export function n8nConfig(tenant: Tenant) {
   return {
     shipUrl: tenant.n8nShipUrl || process.env.N8N_SHIP_URL || "",
     inspectionUrl: tenant.n8nInspectionUrl || process.env.N8N_INSPECTION_URL || "",
-    portalKey: tenant.n8nPortalKey || process.env.N8N_PORTAL_KEY || "",
+    portalKey: process.env.N8N_PORTAL_KEY?.trim() || tenant.n8nPortalKey?.trim() || "",
   };
 }
 

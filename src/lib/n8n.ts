@@ -11,13 +11,21 @@ export type N8nErrorCode =
   | "n8n_unreachable";
 
 export class N8nError extends Error {
-  code: N8nErrorCode;
+  code: N8nErrorCode | "N8N_PORTAL_KEY is not set";
   status: number;
-  constructor(code: N8nErrorCode, status = 400) {
+  constructor(code: N8nErrorCode | "N8N_PORTAL_KEY is not set", status = 400) {
     super(code);
     this.code = code;
     this.status = status;
   }
+}
+
+function requirePortalKey(): string {
+  const key = process.env.N8N_PORTAL_KEY?.trim();
+  if (!key) {
+    throw new N8nError("N8N_PORTAL_KEY is not set", 500);
+  }
+  return key;
 }
 
 type N8nResponse = {
@@ -76,7 +84,9 @@ export async function callInspection(
 
   const cfg = n8nConfig(tenant);
   if (!cfg.inspectionUrl) throw new N8nError("n8n_unreachable", 503);
+  const key = requirePortalKey();
   return postJson(cfg.inspectionUrl, {
+    key,
     session_id: input.session_id,
     result: input.result,
     note: input.note,
@@ -107,8 +117,9 @@ export async function callShip(
 
   const cfg = n8nConfig(tenant);
   if (!cfg.shipUrl) throw new N8nError("n8n_unreachable", 503);
+  const key = requirePortalKey();
   return postJson(cfg.shipUrl, {
-    key: cfg.portalKey,
+    key,
     session_id: input.session_id,
     courier: input.courier,
     tracking_number: input.tracking_number,

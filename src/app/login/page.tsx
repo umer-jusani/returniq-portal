@@ -10,7 +10,7 @@ export default function LoginPage() {
 
       <div className="relative mx-auto grid min-h-dvh max-w-6xl items-center gap-12 px-6 py-12 lg:grid-cols-2">
         <div className="hidden text-white lg:block">
-          <p className="text-sm tracking-[0.28em] text-white/50 uppercase">ReturnIQ · DDU Supplies</p>
+          <p className="text-sm tracking-[0.28em] text-white/50 uppercase">ReturnIQ merchant portal</p>
           <h1 className="font-display mt-6 max-w-lg text-6xl leading-[0.95]">
             Every return.
             <br />

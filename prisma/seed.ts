@@ -6,32 +6,27 @@ const prisma = new PrismaClient();
 async function main() {
   const passwordHash = await bcrypt.hash("ReturnIQ!2026", 12);
 
-  const tenant = await prisma.tenant.upsert({
-    where: { slug: "ddu" },
-    update: {
-      name: "DDU Supplies",
-      airtableBaseId: process.env.AIRTABLE_BASE_ID || "appeYSqwZlQlwRCf9",
-      airtableTableId: process.env.AIRTABLE_TABLE_ID || "tblOUYWhqtCfLL4nW",
-      airtablePat: process.env.AIRTABLE_PAT || null,
-      airtableWebhookId: process.env.AIRTABLE_WEBHOOK_ID || null,
-      airtableMacSecret: process.env.AIRTABLE_MAC_SECRET || null,
-      n8nShipUrl: process.env.N8N_SHIP_URL || null,
-      n8nInspectionUrl: process.env.N8N_INSPECTION_URL || null,
-      n8nPortalKey: process.env.N8N_PORTAL_KEY || null,
-      timezone: "Asia/Karachi",
-    },
-    create: {
-      name: "DDU Supplies",
-      slug: "ddu",
-      airtableBaseId: process.env.AIRTABLE_BASE_ID || "appeYSqwZlQlwRCf9",
-      airtableTableId: process.env.AIRTABLE_TABLE_ID || "tblOUYWhqtCfLL4nW",
-      airtablePat: process.env.AIRTABLE_PAT || null,
-      n8nShipUrl: process.env.N8N_SHIP_URL || null,
-      n8nInspectionUrl: process.env.N8N_INSPECTION_URL || null,
-      n8nPortalKey: process.env.N8N_PORTAL_KEY || null,
-      timezone: "Asia/Karachi",
-    },
+  const existing = await prisma.tenant.findFirst({
+    where: { slug: { in: ["ddu", "returniq"] } },
   });
+
+  const data = {
+    name: "ReturnIQ",
+    slug: "returniq",
+    airtableBaseId: process.env.AIRTABLE_BASE_ID || "appeYSqwZlQlwRCf9",
+    airtableTableId: process.env.AIRTABLE_TABLE_ID || "tblOUYWhqtCfLL4nW",
+    airtablePat: process.env.AIRTABLE_PAT || null,
+    airtableWebhookId: process.env.AIRTABLE_WEBHOOK_ID || null,
+    airtableMacSecret: process.env.AIRTABLE_MAC_SECRET || null,
+    n8nShipUrl: process.env.N8N_SHIP_URL || null,
+    n8nInspectionUrl: process.env.N8N_INSPECTION_URL || null,
+    n8nPortalKey: process.env.N8N_PORTAL_KEY || null,
+    timezone: "Asia/Karachi",
+  };
+
+  const tenant = existing
+    ? await prisma.tenant.update({ where: { id: existing.id }, data })
+    : await prisma.tenant.create({ data });
 
   const people = [
     { email: "uma.s@example.org", name: "Umer Jusani", role: "admin" },
@@ -47,7 +42,7 @@ async function main() {
     });
   }
 
-  console.log("Seeded DDU Supplies tenant with admin / warehouse / support.");
+  console.log("Seeded ReturnIQ tenant with admin / warehouse / support.");
   console.log("Login: uma.s@example.org / ReturnIQ!2026");
 }
 
